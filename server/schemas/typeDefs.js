@@ -12,10 +12,11 @@ const typeDefs = `
     
     type Recipe
         _id: ID
+        title: String
         category: [Category]
         description: String
         ingredients: [Ingredient]
-        preperationTime: Int
+        preparationTime: Int
         servings: Int
         author: String
     }
