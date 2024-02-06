@@ -17,7 +17,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
-    errorElement: <NoMatch />,
+    //errorElement: <NoMatch />,
     children: [
       {
         index: true,
@@ -47,16 +47,16 @@ const router = createBrowserRouter([
         path: "/recipes/:id",
         element: <RecipeDetail />,
       },
-      {
-        path: "/search",
-        element: <Search />,
-      },
       /*{
+        path: "/search",
+        //element: <Search />,
+      },
+      {
         path: "/success",
         element: <Success />,
       },*/
-    ],
-  },
+    ]
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
