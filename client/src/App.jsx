@@ -7,8 +7,8 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-import Header from "./component/Header";
-import Footer from "./component/Footer";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import { StoreProvider } from "./utils/GlobalState";
 
 const httpLink = createHttpLink({

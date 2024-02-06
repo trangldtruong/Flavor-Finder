@@ -10,10 +10,10 @@ const recipeSchema = new Schema({
   description: {
     type: String
   },
-  ingredients: {
+  ingredients: [{
     type: String,
     required: true
-  },
+  }],
   preparationTime: {
     type: Number,
     min: 0,
@@ -35,7 +35,7 @@ const recipeSchema = new Schema({
     type: String,
   },
   author: {
-    type: Schema.Types.UserId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
     required: true
   }

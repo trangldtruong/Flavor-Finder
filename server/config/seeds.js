@@ -11,6 +11,8 @@ db.once("open", async () => {
     { name: "Breakfast" },
     { name: "Lunch" },
     { name: "Dinner" },
+    { name: "Desert"},
+    { name: "Snack"}
   ]);
 
   console.log("Categories seeded");
@@ -134,7 +136,7 @@ db.once("open", async () => {
     {
       title: "Berry Smoothie",
       description: "Refreshing berry smoothie for a quick breakfast.",
-      category: categories[3]._id,
+      category: categories[0]._id,
       ingredients: ["Mixed Berries", "Yogurt", "Honey", "Banana"],
       preparationTime: 10,
       servings: 2,
@@ -191,7 +193,7 @@ db.once("open", async () => {
     {
       title: "Mango Salsa",
       description: "Fresh and vibrant mango salsa for dipping or topping.",
-      category: categories[3]._id,
+      category: categories[1]._id,
       ingredients: ["Mango", "Red Onion", "Cilantro", "Lime Juice"],
       preparationTime: 15,
       servings: 4,
