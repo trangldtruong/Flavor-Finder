@@ -58,9 +58,9 @@ const resolvers = {
 
             throw AuthenticationError;
         },
-        updateUser: async (parent, args, context) => {
+        updateRecipe: async (parent, args, context) => {
             if (context.user) {
-                return await User.findByIdAndUpdate(context.user._id, args, {
+                return await User.findByIdAndUpdate(context._id, args, {
                     new: true,
                 });
             }

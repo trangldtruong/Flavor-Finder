@@ -10,7 +10,7 @@ const typeDefs = `
         name: String
     }
     
-    type Recipe
+    type Recipe {
         _id: ID
         title: String
         category: [Category]
@@ -25,7 +25,7 @@ const typeDefs = `
         _id: ID
         firstName: String
         lastName: String
-        email:
+        email: String
         recipes: [Recipe]
     }
 
@@ -42,11 +42,13 @@ const typeDefs = `
     }
 
     type Mutation {
-        addUser(firstName: String!, lastName: String!, email: String!, password: String!) Auth
-        addRecipe(description: String, ingredients: [ID]!, preparetionTime: Int, servings: Int, author: String): Recpie
-        updateUser(firstName: String, lastName: String, email: String, password: String): User
+        addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
+        addRecipe(description: String, ingredients: [ID]!, preparationTime: Int, servings: Int, author: String): Recipe
+        updateRecipe(description: String, ingredients: [ID]!, preparationTime: Int, servings: Int, author: String): Recipe
         login(email: String!, password: String!): Auth
 
     }
 
-`
+`;
+
+module.exports = typeDefs;

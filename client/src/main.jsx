@@ -4,10 +4,10 @@ import "./index.css";
 
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
-import NoMatch from "./pages/NoMatch.jsx";
+//import NoMatch from "./pages/NoMatch.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
-import Success from "./pages/Success.jsx";
+//import Success from "./pages/Success.jsx";
 import Myrecipes from "./components/MyRecipes.jsx";
 import RecipeDetail from "./components/RecipeDetail.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
@@ -51,10 +51,10 @@ const router = createBrowserRouter([
         path: "/search",
         element: <Search />,
       },
-      {
+      /*{
         path: "/success",
         element: <Success />,
-      },
+      },*/
     ],
   },
 ]);
