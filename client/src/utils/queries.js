@@ -26,16 +26,17 @@ export const QUERY_RECIPES = gql`
 `;
 
 export const QUERY_USER = gql`
-  {
-    user {
-      firstName
-      lastName
-      recipes {
+  query userRecipe{
+      userRecipes {
         title
-        category
+        category {
+          name
+        }
         description
         ingredients
+        preparationTime
+        servings
+        author
       }
-    }
   }
 `;
