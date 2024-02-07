@@ -53,7 +53,7 @@ const Myrecipes = () => {
     <div>
       <h2>My Recipes</h2>
 
-      <Link to="/recipe-form" onClick={handleAddRecipeClick}>
+      <Link to="/recipeForm" onClick={handleAddRecipeClick}>
         <button>Add New Recipe</button>
       </Link>
       <ul>

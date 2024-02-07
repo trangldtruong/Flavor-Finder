@@ -12,6 +12,7 @@ import Myrecipes from "./components/MyRecipes.jsx";
 import RecipeDetail from "./components/RecipeDetail.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import RecipeForm from "./components/RecipeForm.jsx";
+import CategoryMenu from "./components/CategoryMenu.jsx";
 
 const router = createBrowserRouter([
   {
@@ -40,13 +41,17 @@ const router = createBrowserRouter([
         element: <Myrecipes />,
       },
       {
-        path: "/recipe-form",
+        path: "/recipeForm",
         element: <RecipeForm />,
       },
       {
         path: "/recipes/:id",
         element: <RecipeDetail />,
       },
+      {
+        path: "/categories",
+        element: <CategoryMenu/>,
+      }
       /*{
         path: "/search",
         //element: <Search />,

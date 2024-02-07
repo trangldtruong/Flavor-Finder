@@ -7,7 +7,7 @@ db.once("open", async () => {
   await cleanDB("Recipe", "recipes");
   await cleanDB("User", "users");
 
-  const categories = await Category.insertMany([
+  const categories = await Category.create([
     { name: "Breakfast" },
     { name: "Lunch" },
     { name: "Dinner" },
@@ -17,7 +17,14 @@ db.once("open", async () => {
 
   console.log("Categories seeded");
 
-  const users = await User.insertMany([
+  await User.create({
+    firstName: 'Elijah',
+    lastName: 'Holt',
+    email: 'eholt@testmail.com',
+    password: 'password12345'
+  });
+
+  const users = await User.create([
     {
       firstName: "John",
       lastName: "Doe",
@@ -388,7 +395,7 @@ db.once("open", async () => {
       notes: "Garnish with chopped green onions.",
     },
   ];
-  const recipes = await Recipe.insertMany(
+  const recipes = await Recipe.create(
     recipesData.map((recipe) => ({
       ...recipe,
       author: users[Math.floor(Math.random() * users.length)]._id,

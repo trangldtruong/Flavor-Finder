@@ -13,9 +13,9 @@ const typeDefs = `
     type Recipe {
         _id: ID
         title: String
-        category: [Category]
+        category: Category
         description: String
-        ingredients: [Ingredient]
+        ingredients: [String]
         preparationTime: Int
         servings: Int
         author: String
@@ -38,7 +38,7 @@ const typeDefs = `
         categories: [Category]
         recipes(category: ID, name: String): [Recipe]
         recipe(_id: ID!): Recipe
-        user: User
+        userRecipes: [Recipe]
     }
 
     type Mutation {

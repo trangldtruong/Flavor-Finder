@@ -25,14 +25,19 @@ const resolvers = {
         recipe: async( parent, { _id }) => {
             return await Recipe.findById(_id).populate('category');
         },
-        user: async ( parent, args, context) => {
+        userRecipes: async ( parent, args, context) => {
+            console.log(context.user)
             if( context.user) {
-                const user = await User.findById(context.user._id).populate({
-                    path: 'recipes',
-                    populate: 'category',
-                });
-
-                return user;
+                const recipe = await Recipe.find({"author": context.user._id}).populate("category")
+                console.log(recipe)
+                // const user = await User.findById(context.user._id).populate({
+                //     path: 'recipes', 
+                //     populate:{
+                //         path: 'category',
+                //         model: 'Category'
+                //}});
+                //console.log(user);
+                return recipe;
             }
 
             throw AuthenticationError;
