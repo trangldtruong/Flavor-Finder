@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { useStoreContext } from "../utils/GlobalState";
 import { QUERY_RECIPES } from "../utils/queries";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const RecipeList = () => {
   const [state, dispatch] = useStoreContext();
   const { loading, data } = useQuery(QUERY_RECIPES);
+  const { categoryId } = useParams();
 
   useEffect(() => {
     if (data) {
@@ -22,10 +23,8 @@ const RecipeList = () => {
   }
 
   // Filter recipes based on the selected category
-  const filteredRecipes = state.currentCategory
-    ? state.recipes.filter(
-        (recipe) => recipe.category._id === state.currentCategory
-      )
+  const filteredRecipes = categoryId
+    ? state.recipes.filter((recipe) => recipe.category._id === categoryId)
     : state.recipes;
 
   return (

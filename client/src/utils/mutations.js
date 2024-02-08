@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -12,45 +12,71 @@ export const LOGIN = gql`
 `;
 
 export const ADD_RECIPE = gql`
-  mutation addRecipe($recipes: [ID]!) {
-    addRecipe(recipes: $recipes) {
-      recipe {
+  mutation addRecipe(
+    $description: String
+    $ingredients: [String]!
+    $preparationTime: Int
+    $servings: Int
+    $author: ID
+  ) {
+    addRecipe(
+      description: $description
+      ingredients: $ingredients
+      preparationTime: $preparationTime
+      servings: $servings
+      author: $author
+    ) {
+      _id
+      title
+      category {
+        name
+      }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
         _id
-        title
-        description
-        ingredients
-        preparationTime
-        servings
-        instructions
-        category {
-          name
-        }
-        notes
-        author
       }
     }
   }
 `;
 
 export const UPDATE_RECIPE = gql`
-mutation updateRecipe($recipes: [ID]!) {
-    updateRecipe(recipes: $recipes) {
-        recipe {
-            _id
-            title
-            description
-            ingredients
-            preparationTime
-            servings
-            instructions
-            category {
-              name
-            }
-            notes
-            author
-        }
+  mutation updateRecipe(
+    $_id: ID!
+    $description: String
+    $ingredients: [String]!
+    $preparationTime: Int
+    $servings: Int
+    $author: ID
+  ) {
+    updateRecipe(
+      _id: $_id
+      description: $description
+      ingredients: $ingredients
+      preparationTime: $preparationTime
+      servings: $servings
+      author: $author
+    ) {
+      _id
+      title
+      category {
+        name
+      }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
     }
- }
+  }
 `;
 
 export const ADD_USER = gql`
@@ -75,22 +101,19 @@ export const ADD_USER = gql`
 `;
 
 export const DELETE_RECIPE = gql`
-mutation deleteRecipe($recipes: [ID]!) {
-    deleteRecipe(recipes: $recipes) {
-        recipes {
-            _id
-            title
-            description
-            ingredients
-            preparationTime
-            servings
-            instructions
-            category {
-              name
-            }
-            notes
-            author
-        }
+  mutation deleteRecipe($_id: ID!) {
+    deleteRecipe(_id: $_id) {
+      _id
+      title
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
     }
-}
+  }
 `;

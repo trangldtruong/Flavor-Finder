@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const QUERY_CATEGORIES = gql`
-  {
+  query getCategories {
     categories {
       _id
       name
@@ -9,34 +9,45 @@ export const QUERY_CATEGORIES = gql`
   }
 `;
 
-
-
 export const QUERY_RECIPES = gql`
   query getRecipes {
-    _id
-    category{
+    recipes {
+      _id
+      title
+      category {
         name
+      }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+        firstName
+        lastName
+      }
     }
-    description
-    ingredients
-    preparationTime
-    servings
-    author
   }
 `;
 
 export const QUERY_USER = gql`
-  query userRecipe{
-      userRecipes {
-        title
-        category {
-          name
-        }
-        description
-        ingredients
-        preparationTime
-        servings
-        author
+  query getUserRecipes {
+    userRecipes {
+      title
+      category {
+        name
       }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
+    }
   }
 `;

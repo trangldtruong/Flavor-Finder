@@ -11,25 +11,18 @@ db.once("open", async () => {
     { name: "Breakfast" },
     { name: "Lunch" },
     { name: "Dinner" },
-    { name: "Desert"},
-    { name: "Snack"}
+    { name: "Desert" },
+    { name: "Snack" },
   ]);
 
   console.log("Categories seeded");
-
-  await User.create({
-    firstName: 'Elijah',
-    lastName: 'Holt',
-    email: 'eholt@testmail.com',
-    password: 'password12345'
-  });
 
   const users = await User.create([
     {
       firstName: "John",
       lastName: "Doe",
       email: "john@example.com",
-      password: "password12345",
+      password: " ",
     },
     {
       firstName: "Alice",
@@ -396,9 +389,9 @@ db.once("open", async () => {
     },
   ];
   const recipes = await Recipe.create(
-    recipesData.map((recipe) => ({
+    recipesData.map((recipe, index) => ({
       ...recipe,
-      author: users[Math.floor(Math.random() * users.length)]._id,
+      author: users[index % users.length]._id,
     }))
   );
 

@@ -1,77 +1,38 @@
-import { useEffect } from "react";
+import React from "react";
 import { useQuery } from "@apollo/client";
-import { useStoreContext } from "../utils/GlobalState";
-import {
-  UPDATE_CATEGORIES,
-  UPDATE_CURRENT_CATEGORY,
-} from "../utils/actions";
 import { QUERY_CATEGORIES } from "../utils/queries";
+import { Link } from "react-router-dom";
 
-function CategoryMenu() {
-  const [state, dispatch] = useStoreContext();
+const CategoryMenu = () => {
+  // Fetch categories using the QUERY_CATEGORIES query
+  const { loading, error, data } = useQuery(QUERY_CATEGORIES);
 
-  const { categories, currentCategory } = state;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-  const { loading, data: categoryData } = useQuery(QUERY_CATEGORIES);
-
-  useEffect(() => {
-    if (categoryData) {
-      dispatch({
-        type: UPDATE_CATEGORIES,
-        categories: categoryData.categories,
-      });
-    }
-  }, [categoryData, dispatch]);
-
-  const handleClick = (id) => {
-    dispatch({
-      type: UPDATE_CURRENT_CATEGORY,
-      currentCategory: id,
-    });
-  };
-
-  /*return (
-    <div>
-      <h2>Choose a Category:</h2>
-      <select
-        value={currentCategory}
-        onChange={(e) => handleClick(e.target.value)}
-      >
-        <option value="">All</option>
-        {categories.map((item) => (
-          <option key={item._id} value={item._id}>
-            {item.name}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-  */
+  // Extract categories from the query data
+  const categories = data.categories;
 
   return (
-     <div>
-       <h2>Choose a Category:</h2>
-       {categories.map((item) => (
-        <button
-          key={item._id}
-          onClick={() => {
-            handleClick(item._id);
-          }}
-          className={currentCategory === item._id ? "active" : ""}
-        >
-          {item.name}
+    <div>
+      <h2>Categories</h2>
+
+      {categories.map((category) => (
+        <button key={category._id}>
+          {/* Pass category ID as URL parameter */}
+          <Link to={`/categories/${category._id}`}>{category.name}</Link>
         </button>
       ))}
+
       <button
         onClick={() => {
           handleClick("");
         }}
-        className={!currentCategory ? "active" : ""}
       >
         All
       </button>
     </div>
   );
-}
+};
 
 export default CategoryMenu;
