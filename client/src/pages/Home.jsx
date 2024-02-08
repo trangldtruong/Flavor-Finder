@@ -5,7 +5,9 @@ import RecipeList from "../components/RecipeList";
 const Home = () => {
   return (
     <div className="container">
+      
       <RecipeList />
+      
     </div>
   );
 };
