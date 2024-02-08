@@ -11,20 +11,47 @@ export const LOGIN = gql`
   }
 `;
 
+export const ADD_USER = gql`
+  mutation addUser(
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $password: String!
+  ) {
+    addUser(
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      password: $password
+    ) {
+      token
+      user {
+        _id
+      }
+    }
+  }
+`;
+
 export const ADD_RECIPE = gql`
   mutation addRecipe(
-    $description: String
+    $title: String!
+    $category: String!
+    $description: String!
     $ingredients: [String]!
-    $preparationTime: Int
-    $servings: Int
-    $author: ID
+    $preparationTime: Int!
+    $servings: Int!
+    $instructions: String!
+    $notes: String!
   ) {
     addRecipe(
+      title: $title
+      category: $category
       description: $description
       ingredients: $ingredients
       preparationTime: $preparationTime
       servings: $servings
-      author: $author
+      instructions: $instructions
+      notes: $notes
     ) {
       _id
       title
@@ -47,19 +74,25 @@ export const ADD_RECIPE = gql`
 export const UPDATE_RECIPE = gql`
   mutation updateRecipe(
     $_id: ID!
-    $description: String
+    $title: String!
+    $category: String!
+    $description: String!
     $ingredients: [String]!
-    $preparationTime: Int
-    $servings: Int
-    $author: ID
+    $preparationTime: Int!
+    $servings: Int!
+    $instructions: String!
+    $notes: String!
   ) {
     updateRecipe(
       _id: $_id
+      title: $title
+      category: $category
       description: $description
       ingredients: $ingredients
       preparationTime: $preparationTime
       servings: $servings
-      author: $author
+      instructions: $instructions
+      notes: $notes
     ) {
       _id
       title
@@ -73,27 +106,6 @@ export const UPDATE_RECIPE = gql`
       instructions
       notes
       author {
-        _id
-      }
-    }
-  }
-`;
-
-export const ADD_USER = gql`
-  mutation addUser(
-    $firstName: String!
-    $lastName: String!
-    $email: String!
-    $password: String!
-  ) {
-    addUser(
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      password: $password
-    ) {
-      token
-      user {
         _id
       }
     }

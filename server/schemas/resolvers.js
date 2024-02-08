@@ -52,7 +52,7 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    addRecipe: async (parent, args) => {
+    addRecipe: async (parent, args, context) => {
       if (context.user) {
         const recipe = new Recipe({});
 

@@ -22,7 +22,7 @@ db.once("open", async () => {
       firstName: "John",
       lastName: "Doe",
       email: "john@example.com",
-      password: " ",
+      password: "password9876m",
     },
     {
       firstName: "Alice",

@@ -45,7 +45,16 @@ type Query {
 
 type Mutation {
     addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
-    addRecipe(description: String, ingredients: [ID]!, preparationTime: Int, servings: Int): Recipe
+    addRecipe(
+        title: String!
+        description: String!
+        category: String!
+        ingredients: [String]!
+        preparationTime: Int!
+        servings: Int!
+        instructions: String
+        notes: String
+      ): Recipe
     updateRecipe(_id: ID!, description: String, ingredients: [ID]!, preparationTime: Int, servings: Int): Recipe
     login(email: String!, password: String!): Auth
 }

@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { QUERY_USER } from "../utils/queries";
 import { Link } from "react-router-dom";
+import RecipeForm from "./RecipeForm";
 
 const MyRecipes = () => {
+  const [showRecipeForm, setShowRecipeForm] = useState(false);
+  const [editRecipeId, setEditRecipeId] = useState(null);
+
   // Fetch the current user's recipes using the QUERY_USER query
   const { loading, error, data } = useQuery(QUERY_USER);
+
+  const handleAddRecipeClick = () => {
+    setShowRecipeForm(true);
+    setEditRecipeId(null); // Reset editRecipeId to null to indicate adding new recipe
+  };
+
+  const handleEditRecipeClick = (recipeId) => {
+    setShowRecipeForm(true);
+    setEditRecipeId(recipeId);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -16,9 +30,16 @@ const MyRecipes = () => {
   return (
     <div>
       <h2>My Recipes</h2>
-      <Link to="/recipeForm">
+      {/* <Link to="/recipeForm">
         <button>Add New Recipe</button>
-      </Link>
+      </Link> */}
+      <button onClick={handleAddRecipeClick}>Add New Recipe</button>
+      {showRecipeForm && (
+        <RecipeForm
+          editMode={editRecipeId ? true : false}
+          recipeId={editRecipeId}
+        />
+      )}
       <ul>
         {userRecipes.map((recipe) => (
           <li key={recipe._id}>
@@ -30,9 +51,9 @@ const MyRecipes = () => {
             <p>Servings: {recipe.servings}</p>
             <p>Instructions: {recipe.instructions}</p>
             <p>Notes: {recipe.notes}</p>
-            <Link to="/recipeForm">
-              <button>Edit Recipe</button>
-            </Link>
+            <button onClick={() => handleEditRecipeClick(recipe._id)}>
+              Edit Recipe
+            </button>
             <button>Delete Recipe</button>
           </li>
         ))}
