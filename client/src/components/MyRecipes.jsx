@@ -1,78 +1,60 @@
-import React, { useEffect } from "react";
-import { useQuery, useMutation } from "@apollo/client";
-import { useStoreContext } from "../utils/GlobalState";
-import { QUERY_RECIPES } from "../utils/queries";
-import { DELETE_RECIPE } from "../utils/mutations";
+import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { QUERY_USER } from "../utils/queries";
 import { Link } from "react-router-dom";
+import RecipeForm from "./RecipeForm";
 
-const Myrecipes = () => {
-  const [state, dispatch] = useStoreContext();
-  const { loading, data, refetch } = useQuery(QUERY_RECIPES);
-  const [deleteRecipe] = useMutation(DELETE_RECIPE);
+const MyRecipes = () => {
+  const [showRecipeForm, setShowRecipeForm] = useState(false);
+  const [editRecipeId, setEditRecipeId] = useState(null);
 
-  useEffect(() => {
-    if (data) {
-      dispatch({
-        type: "SET_RECIPES",
-        payload: data.recipes,
-      });
-    }
-  }, [data, dispatch]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const userRecipes = state.recipes.filter(
-    (recipe) => recipe.author.id === state.user.id
-  );
-
-  const handleEditClick = (recipe) => {
-    dispatch({ type: "SET_CURRENT_RECIPE", payload: recipe });
-  };
+  // Fetch the current user's recipes using the QUERY_USER query
+  const { loading, error, data } = useQuery(QUERY_USER);
 
   const handleAddRecipeClick = () => {
-    dispatch({ type: "CLEAR_CURRENT_RECIPE" });
+    setShowRecipeForm(true);
+    setEditRecipeId(null); // Reset editRecipeId to null to indicate adding new recipe
   };
 
-  const handleDelete = async (recipeId) => {
-    try {
-      await deleteRecipe({
-        variables: {
-          recipeId: recipeId,
-        },
-      });
-
-      refetch();
-    } catch (error) {
-      console.error(error);
-    }
+  const handleEditRecipeClick = (recipeId) => {
+    setShowRecipeForm(true);
+    setEditRecipeId(recipeId);
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  // Extract user's recipes from the query data
+  const userRecipes = data.userRecipes;
 
   return (
     <div>
       <h2>My Recipes</h2>
-
-      <Link to="/recipeForm" onClick={handleAddRecipeClick}>
+      {/* <Link to="/recipeForm">
         <button>Add New Recipe</button>
-      </Link>
+      </Link> */}
+      <button onClick={handleAddRecipeClick}>Add New Recipe</button>
+      {showRecipeForm && (
+        <RecipeForm
+          editMode={editRecipeId ? true : false}
+          recipeId={editRecipeId}
+        />
+      )}
       <ul>
         {userRecipes.map((recipe) => (
           <li key={recipe._id}>
             <p>{recipe.title}</p>
             <p>Description: {recipe.description}</p>
-            <p>Category: {recipe.category.name}</p>{" "}
+            <p>Category: {recipe.category.name}</p>
             <p>Ingredients: {recipe.ingredients.join(", ")}</p>
             <p>Preparation Time: {recipe.preparationTime} minutes</p>
             <p>Servings: {recipe.servings}</p>
             <p>Instructions: {recipe.instructions}</p>
-            <p>Notes: {recipe.notes}</p>{" "}
-            <Link to="/recipe-form" onClick={() => handleEditClick(recipe)}>
-              <button>Edit Recipe</button>
-            </Link>
-            <button onClick={() => handleDelete(recipe._id)}>
-              Delete Recipe
+            <p>Notes: {recipe.notes}</p>
+            <button onClick={() => handleEditRecipeClick(recipe._id)}>
+              Edit Recipe
             </button>
+            <button>Delete Recipe</button>
           </li>
         ))}
       </ul>
@@ -80,4 +62,4 @@ const Myrecipes = () => {
   );
 };
 
-export default Myrecipes;
+export default MyRecipes;

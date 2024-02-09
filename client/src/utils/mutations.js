@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -9,48 +9,6 @@ export const LOGIN = gql`
       }
     }
   }
-`;
-
-export const ADD_RECIPE = gql`
-  mutation addRecipe($recipes: [ID]!) {
-    addRecipe(recipes: $recipes) {
-      recipe {
-        _id
-        title
-        description
-        ingredients
-        preparationTime
-        servings
-        instructions
-        category {
-          name
-        }
-        notes
-        author
-      }
-    }
-  }
-`;
-
-export const UPDATE_RECIPE = gql`
-mutation updateRecipe($recipes: [ID]!) {
-    updateRecipe(recipes: $recipes) {
-        recipe {
-            _id
-            title
-            description
-            ingredients
-            preparationTime
-            servings
-            instructions
-            category {
-              name
-            }
-            notes
-            author
-        }
-    }
- }
 `;
 
 export const ADD_USER = gql`
@@ -74,23 +32,100 @@ export const ADD_USER = gql`
   }
 `;
 
-export const DELETE_RECIPE = gql`
-mutation deleteRecipe($recipes: [ID]!) {
-    deleteRecipe(recipes: $recipes) {
-        recipes {
-            _id
-            title
-            description
-            ingredients
-            preparationTime
-            servings
-            instructions
-            category {
-              name
-            }
-            notes
-            author
-        }
+export const ADD_RECIPE = gql`
+  mutation addRecipe(
+    $title: String!
+    $category: String!
+    $description: String!
+    $ingredients: [String]!
+    $preparationTime: Int!
+    $servings: Int!
+    $instructions: String!
+    $notes: String!
+  ) {
+    addRecipe(
+      title: $title
+      category: $category
+      description: $description
+      ingredients: $ingredients
+      preparationTime: $preparationTime
+      servings: $servings
+      instructions: $instructions
+      notes: $notes
+    ) {
+      _id
+      title
+      category {
+        name
+      }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
     }
-}
+  }
+`;
+
+export const UPDATE_RECIPE = gql`
+  mutation updateRecipe(
+    $_id: ID!
+    $title: String!
+    $category: String!
+    $description: String!
+    $ingredients: [String]!
+    $preparationTime: Int!
+    $servings: Int!
+    $instructions: String!
+    $notes: String!
+  ) {
+    updateRecipe(
+      _id: $_id
+      title: $title
+      category: $category
+      description: $description
+      ingredients: $ingredients
+      preparationTime: $preparationTime
+      servings: $servings
+      instructions: $instructions
+      notes: $notes
+    ) {
+      _id
+      title
+      category {
+        name
+      }
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
+    }
+  }
+`;
+
+export const DELETE_RECIPE = gql`
+  mutation deleteRecipe($_id: ID!) {
+    deleteRecipe(_id: $_id) {
+      _id
+      title
+      description
+      ingredients
+      preparationTime
+      servings
+      instructions
+      notes
+      author {
+        _id
+      }
+    }
+  }
 `;

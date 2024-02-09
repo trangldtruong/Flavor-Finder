@@ -1,13 +1,13 @@
+// import Myrecipes from "../components/MyRecipes";
 import RecipeList from "../components/RecipeList";
 
-// import CategoryMenu from "../components/CategoryMenu";
+import CategoryMenu from "../components/CategoryMenu";
 
 const Home = () => {
   return (
     <div className="container">
-      
+      <CategoryMenu />
       <RecipeList />
-      
     </div>
   );
 };

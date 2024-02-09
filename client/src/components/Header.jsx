@@ -26,9 +26,6 @@ const Header = () => {
               <Link to="/myRecipes">My Recipes</Link>
             </li>
             <li className="mx-1">
-              <Link to="/search">Search</Link>
-            </li>
-            <li className="mx-1">
               <a href="/" onClick={() => Auth.logout()}>
                 Logout
               </a>

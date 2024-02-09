@@ -1,14 +1,11 @@
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
-
 import App from "./App.jsx";
 import Home from "./pages/Home.jsx";
-//import NoMatch from "./pages/NoMatch.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
-//import Success from "./pages/Success.jsx";
-import Myrecipes from "./components/MyRecipes.jsx";
+import MyRecipes from "./components/MyRecipes.jsx";
 import RecipeDetail from "./components/RecipeDetail.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import RecipeForm from "./components/RecipeForm.jsx";
@@ -38,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/myRecipes",
-        element: <Myrecipes />,
+        element: <MyRecipes />,
       },
       {
         path: "/recipeForm",
@@ -50,18 +47,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/categories",
-        element: <CategoryMenu/>,
-      }
-      /*{
-        path: "/search",
-        //element: <Search />,
+        element: <CategoryMenu />,
       },
-      {
-        path: "/success",
-        element: <Success />,
-      },*/
-    ]
-  }
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { useMutation } from "@apollo/client";
-import { useStoreContext } from "../utils/GlobalState";
+import { useQuery, useMutation } from "@apollo/client";
 import { ADD_RECIPE, UPDATE_RECIPE } from "../utils/mutations";
 import { QUERY_RECIPES } from "../utils/queries";
 
-const RecipeForm = () => {
-  const [state, dispatch] = useStoreContext();
-  const { loading, data, refetch } = useQuery(QUERY_RECIPES);
+const RecipeForm = ({ editMode, recipeId }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -21,25 +17,27 @@ const RecipeForm = () => {
 
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [updateRecipe] = useMutation(UPDATE_RECIPE);
+  const { loading, data, refetch } = useQuery(QUERY_RECIPES);
 
   useEffect(() => {
-    // If there's a currentRecipe in the global state, update the form data
-    if (state.currentRecipe) {
-      setFormData(state.currentRecipe);
-    } else {
-      // If no currentRecipe, form data remains unchanged
-      setFormData({
-        title: "",
-        description: "",
-        category: "",
-        ingredients: "",
-        preparationTime: "",
-        servings: "",
-        instructions: "",
-        notes: "",
-      });
+    if (editMode && recipeId && data) {
+      const existingRecipe = data.recipes.find(
+        (recipe) => recipe._id === recipeId
+      );
+      if (existingRecipe) {
+        setFormData({
+          title: existingRecipe.title,
+          description: existingRecipe.description,
+          category: existingRecipe.category.name,
+          ingredients: existingRecipe.ingredients.join(", "),
+          preparationTime: existingRecipe.preparationTime.toString(),
+          servings: existingRecipe.servings.toString(),
+          instructions: existingRecipe.instructions,
+          notes: existingRecipe.notes,
+        });
+      }
     }
-  }, [state.currentRecipe]);
+  }, [editMode, recipeId, data]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,28 +49,36 @@ const RecipeForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      if (state.currentRecipe) {
-        // If there's a currentRecipe, update it
+      if (editMode && recipeId) {
         await updateRecipe({
           variables: {
-            recipeId: state.currentRecipe._id,
-            input: formData,
+            _id: recipeId,
+            title: formData.title,
+            category: formData.category,
+            description: formData.description,
+            ingredients: formData.ingredients.split(","),
+            preparationTime: parseInt(formData.preparationTime),
+            servings: parseInt(formData.servings),
+            instructions: formData.instructions,
+            notes: formData.notes,
           },
         });
-        dispatch({ type: "CLEAR_CURRENT_RECIPE" });
       } else {
-        // If no currentRecipe, add a new recipe
         await addRecipe({
           variables: {
-            input: formData,
+            title: formData.title,
+            category: formData.category,
+            description: formData.description,
+            ingredients: formData.ingredients.split(","),
+            preparationTime: parseInt(formData.preparationTime),
+            servings: parseInt(formData.servings),
+            instructions: formData.instructions,
+            notes: formData.notes,
           },
         });
       }
-      // After adding/updating, refetch the recipes
       refetch();
-      // If no currentRecipe, reset the form data
       setFormData({
         title: "",
         description: "",
@@ -84,13 +90,13 @@ const RecipeForm = () => {
         notes: "",
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error:", error.message);
     }
   };
 
   return (
     <div>
-      <h2>{state.currentRecipe ? "Edit Recipe" : "Add New Recipe"}</h2>
+      <h2>{editMode ? "Edit Recipe" : "Add New Recipe"}</h2>
       <form onSubmit={handleSubmit}>
         <label>Title:</label>
         <input
@@ -120,13 +126,15 @@ const RecipeForm = () => {
           onChange={handleInputChange}
         />
         <label>Preparation Time:</label>
-        <textarea
+        <input
+          type="number"
           name="preparationTime"
           value={formData.preparationTime}
           onChange={handleInputChange}
         />
         <label>Servings:</label>
-        <textarea
+        <input
+          type="number"
           name="servings"
           value={formData.servings}
           onChange={handleInputChange}
@@ -145,7 +153,7 @@ const RecipeForm = () => {
         />
 
         <button type="submit">
-          {state.currentRecipe ? "Update Recipe" : "Add Recipe"}
+          {editMode ? "Update Recipe" : "Add Recipe"}
         </button>
       </form>
     </div>
