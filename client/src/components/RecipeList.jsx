@@ -1,9 +1,9 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { Link } from "react-router-dom";
 import { QUERY_RECIPES } from "../utils/queries";
+import { Link } from "react-router-dom";
 
-const RecipeList = () => {
+const RecipeList = ({ categoryId }) => {
   const { loading, error, data } = useQuery(QUERY_RECIPES);
 
   if (loading) {
@@ -14,7 +14,10 @@ const RecipeList = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const recipes = data.recipes;
+  // Filter recipes based on the categoryId if provided
+  const recipes = categoryId
+    ? data.recipes.filter((recipe) => recipe.category._id === categoryId)
+    : data.recipes;
 
   return (
     <div>
@@ -23,6 +26,7 @@ const RecipeList = () => {
         {recipes.map((recipe) => (
           <li key={recipe._id}>
             <p>{recipe.title}</p>
+            <p>Description: {recipe.description}</p>
             <p>Category: {recipe.category.name}</p>
             <Link to={`/recipes/${recipe._id}`}>View Details</Link>
           </li>

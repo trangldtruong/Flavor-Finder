@@ -1,13 +1,18 @@
-// import Myrecipes from "../components/MyRecipes";
+import React, { useState } from "react";
+import CategoryMenu from "../components/CategoryMenu";
 import RecipeList from "../components/RecipeList";
 
-import CategoryMenu from "../components/CategoryMenu";
-
 const Home = () => {
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const handleSelectCategory = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
+
   return (
     <div className="container">
-      <CategoryMenu />
-      <RecipeList />
+      <CategoryMenu onSelectCategory={handleSelectCategory} />
+      <RecipeList categoryId={selectedCategory} />
     </div>
   );
 };
