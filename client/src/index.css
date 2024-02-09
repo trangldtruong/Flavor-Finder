@@ -1,8 +1,8 @@
 :root {
-  --primary: #232F3E;
+  --primary: #8d0e0e;
   --secondary: #F3A847;
   --tertiary: #B12704;
-  --light: #fafafa;
+  --light: #f5f2f2;
   --dark: #272f32;
   --error: rgb(228, 46, 1);
   --spacing-one: calc(1rem * 0.5);
@@ -21,11 +21,15 @@ body {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Karla', sans-serif;
+  font-family: 'Libre Baskerville', serif;
   font-weight: 400;
   line-height: 1.5;
   font-size: 16px;
   color: var(--dark);
+  background-image: url('https://wallpaperaccess.com/full/1537562.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 h1,
@@ -34,14 +38,14 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Libre Baskerville', serif;
   font-weight: 500;
   margin: 5px 0;
   line-height: 1.25;
 }
 
 h1 {
-  font-size: 2.25rem;
+  font-size: 3rem;
 }
 
 h2 {
@@ -64,6 +68,21 @@ h6 {
   font-size: 1rem;
 }
 
+ul {
+  list-style-type: none;
+  
+}
+
+.recipe-list {
+  list-style-type: none;
+  margin: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  background-color: rgb(245, 230, 211);
+  display: flex;
+  flex-direction:column-reverse
+  
+}
 p {
   font-size: 1.1rem;
   margin-top: 0;
@@ -88,15 +107,35 @@ header a {
 }
 
 button {
-  font-size: 1rem;
-  text-decoration: none;
-  padding: 0.25rem 1rem;
-  border-radius: .5rem;
-  border: none;
-  outline: none;
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  padding: 13px 20px 13px;
+  outline: 0;
+  border: 1px solid black;
   cursor: pointer;
-  margin: 0 1px;
-  background-color: var(--secondary);
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+button:after {
+  content: "";
+  background-color: #ffe54c;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  height: 100%;
+  top: 7px;
+  left: 7px;
+  transition: 0.2s;
+}
+
+button:hover:after {
+  top: 0px;
+  left: 0px;
 }
 
 button:hover {
@@ -115,6 +154,7 @@ img {
 span[role="img"] {
   cursor: default;
 }
+
 
 form {
   width: 40%;
@@ -206,5 +246,11 @@ input:focus {
 @media screen and (max-width: 768px) {
   .card {
     width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .button {
+    padding: 13px 50px 13px;
   }
 }
