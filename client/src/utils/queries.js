@@ -15,6 +15,7 @@ export const QUERY_RECIPES = gql`
       _id
       title
       category {
+        _id
         name
       }
       description
