@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header>
       <h1>
-        <Link to="/">Recipe Platform</Link>
+        <Link to="/">Flavor Finder</Link>
       </h1>
       <nav>
         {isAuthenticated ? (
