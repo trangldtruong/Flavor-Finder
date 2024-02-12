@@ -15,7 +15,7 @@ type Recipe {
     title: String
     category: Category
     description: String
-    ingredients: [String]
+    ingredients: [String]!
     preparationTime: Int
     servings: Int
     instructions: String
@@ -48,14 +48,15 @@ type Mutation {
     addRecipe(
         title: String!
         description: String!
-        category: String!
+        category: ID!
         ingredients: [String]!
         preparationTime: Int!
         servings: Int!
         instructions: String
         notes: String
       ): Recipe
-    updateRecipe(_id: ID!, description: String, ingredients: [ID]!, preparationTime: Int, servings: Int): Recipe
+      updateRecipe(_id: ID!, title: String, description: String, category: ID, ingredients: [String], preparationTime: Int, servings: Int, instructions: String, notes: String): Recipe
+      deleteRecipe(_id: ID!): Recipe
     login(email: String!, password: String!): Auth
 }
 

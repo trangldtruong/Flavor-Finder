@@ -35,13 +35,14 @@ export const ADD_USER = gql`
 export const ADD_RECIPE = gql`
   mutation addRecipe(
     $title: String!
-    $category: String!
+    $category: ID
     $description: String!
     $ingredients: [String]!
     $preparationTime: Int!
     $servings: Int!
     $instructions: String!
     $notes: String!
+    $authorId: ID!
   ) {
     addRecipe(
       title: $title
@@ -52,10 +53,12 @@ export const ADD_RECIPE = gql`
       servings: $servings
       instructions: $instructions
       notes: $notes
+      authorId: $authorId
     ) {
       _id
       title
       category {
+        _id
         name
       }
       description
@@ -97,6 +100,7 @@ export const UPDATE_RECIPE = gql`
       _id
       title
       category {
+        _id
         name
       }
       description
@@ -116,16 +120,6 @@ export const DELETE_RECIPE = gql`
   mutation deleteRecipe($_id: ID!) {
     deleteRecipe(_id: $_id) {
       _id
-      title
-      description
-      ingredients
-      preparationTime
-      servings
-      instructions
-      notes
-      author {
-        _id
-      }
     }
   }
 `;
