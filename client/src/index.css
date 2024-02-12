@@ -234,6 +234,10 @@ input:focus {
   padding-bottom: var(--spacing-two);
 }
 
+.nav-bar {
+  display: flex;
+  text-align: right;
+}
 .card {
   width: 25%;
   text-align: center;
