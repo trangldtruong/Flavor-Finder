@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
 import { ADD_RECIPE, UPDATE_RECIPE } from "../utils/mutations";
-import { QUERY_RECIPES } from "../utils/queries";
+import { ADD_RECIPE, UPDATE_RECIPE } from "../utils/mutations";
 
-const RecipeForm = ({ editMode, recipeId }) => {
+const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,27 +17,6 @@ const RecipeForm = ({ editMode, recipeId }) => {
 
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [updateRecipe] = useMutation(UPDATE_RECIPE);
-  const { loading, data, refetch } = useQuery(QUERY_RECIPES);
-
-  useEffect(() => {
-    if (editMode && recipeId && data) {
-      const existingRecipe = data.recipes.find(
-        (recipe) => recipe._id === recipeId
-      );
-      if (existingRecipe) {
-        setFormData({
-          title: existingRecipe.title,
-          description: existingRecipe.description,
-          category: existingRecipe.category.name,
-          ingredients: existingRecipe.ingredients.join(", "),
-          preparationTime: existingRecipe.preparationTime.toString(),
-          servings: existingRecipe.servings.toString(),
-          instructions: existingRecipe.instructions,
-          notes: existingRecipe.notes,
-        });
-      }
-    }
-  }, [editMode, recipeId, data]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,35 +29,69 @@ const RecipeForm = ({ editMode, recipeId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (editMode && recipeId) {
-        await updateRecipe({
+      const {
+        title,
+        description,
+        category,
+        ingredients,
+        preparationTime,
+        servings,
+        instructions,
+        notes,
+      } = formData;
+
+      let updatedRecipe;
+
+      // Call the appropriate mutation based on whether editMode is true or false
+      if (mode === "edit") {
+        const { data } = await updateRecipe({
           variables: {
             _id: recipeId,
-            title: formData.title,
-            category: formData.category,
-            description: formData.description,
-            ingredients: formData.ingredients.split(","),
-            preparationTime: parseInt(formData.preparationTime),
-            servings: parseInt(formData.servings),
-            instructions: formData.instructions,
-            notes: formData.notes,
+            title,
+            description,
+            category,
+            ingredients: ingredients
+              .split(",")
+              .map((ingredient) => ingredient.trim()),
+            preparationTime: parseInt(preparationTime),
+            servings: parseInt(servings),
+            instructions,
+            notes,
           },
         });
+        updatedRecipe = data.updateRecipe;
       } else {
-        await addRecipe({
+        const { data } = await addRecipe({
           variables: {
-            title: formData.title,
-            category: formData.category,
-            description: formData.description,
-            ingredients: formData.ingredients.split(","),
-            preparationTime: parseInt(formData.preparationTime),
-            servings: parseInt(formData.servings),
-            instructions: formData.instructions,
-            notes: formData.notes,
+            title,
+            description,
+            category,
+            ingredients: ingredients
+              .split(",")
+              .map((ingredient) => ingredient.trim()),
+            preparationTime: parseInt(preparationTime),
+            servings: parseInt(servings),
+            instructions,
+            notes,
           },
         });
+        updatedRecipe = data.addRecipe;
       }
-      refetch();
+
+      // // Update userRecipes state with the new recipe
+      // setUserRecipes((prevRecipes) => {
+      //   if (mode === "edit") {
+      //     // If in edit mode, replace the old recipe with the updated one
+      //     return prevRecipes.map((recipe) =>
+      //       recipe._id === updatedRecipe._id ? updatedRecipe : recipe
+      //     );
+      //   } else {
+      //     // If in add mode, keep the existing recipes and add the new recipe
+      //     return [...prevRecipes, updatedRecipe];
+      //   }
+      // });
+
+      // Reset the form data
       setFormData({
         title: "",
         description: "",
@@ -89,32 +102,34 @@ const RecipeForm = ({ editMode, recipeId }) => {
         instructions: "",
         notes: "",
       });
+      onClose();
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
-
+  const handleCancel = () => {
+    onClose();
+  };
   return (
     <div>
-      <h2>{editMode ? "Edit Recipe" : "Add New Recipe"}</h2>
+      <h2>{mode === "edit" ? "Edit Recipe" : "Add New Recipe"}</h2>
       <form onSubmit={handleSubmit}>
-        <label>Title:</label>
+        <label>Title:</label>{" "}
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleInputChange}
         />
-
         <label>Description:</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleInputChange}
         />
-
         <label>Category:</label>
         <input
+          type="text"
           name="category"
           value={formData.category}
           onChange={handleInputChange}
@@ -151,9 +166,9 @@ const RecipeForm = ({ editMode, recipeId }) => {
           value={formData.notes}
           onChange={handleInputChange}
         />
-
-        <button type="submit">
-          {editMode ? "Update Recipe" : "Add Recipe"}
+        <button type="submit">{mode === "edit" ? "Update" : "Submit"}</button>
+        <button type="button" onClick={handleCancel}>
+          Cancel
         </button>
       </form>
     </div>

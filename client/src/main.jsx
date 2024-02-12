@@ -9,6 +9,7 @@ import MyRecipes from "./components/MyRecipes.jsx";
 import RecipeDetail from "./components/RecipeDetail.jsx";
 import AboutUs from "./pages/AboutUs.jsx";
 import RecipeForm from "./components/RecipeForm.jsx";
+import MyRecipeFormParent from "./components/MyRecipeFormParent.jsx";
 import CategoryMenu from "./components/CategoryMenu.jsx";
 
 const router = createBrowserRouter([
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/myRecipes",
-        element: <MyRecipes />,
+        element: <MyRecipeFormParent />,
       },
       {
         path: "/recipeForm",
