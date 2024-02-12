@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header>
       <h1>
-        <Link to="/">Recipe Platform</Link>
+        <Link to="/">Flavor Finder</Link>
       </h1>
       <nav>
         {isAuthenticated ? (
@@ -29,7 +29,7 @@ const Header = () => {
             </li>
           </ul>
         ) : (
-          <ul className="flex-row">
+          <ul className="flex-row nav-bar">
             <li className="mx-1">
               <Link to="/aboutUs">About Us</Link>
             </li>

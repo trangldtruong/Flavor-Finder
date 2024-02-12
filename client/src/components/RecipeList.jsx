@@ -21,10 +21,10 @@ const RecipeList = ({ categoryId }) => {
 
   return (
     <div>
-      <h2>Recipe List</h2>
+      <h3>Recipe List</h3>
       <ul>
         {recipes.map((recipe) => (
-          <li key={recipe._id}>
+          <li className="recipe-list" key={recipe._id}>
             <p>{recipe.title}</p>
             <p>Description: {recipe.description}</p>
             <p>Category: {recipe.category.name}</p>
