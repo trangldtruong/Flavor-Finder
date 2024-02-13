@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { ADD_RECIPE, UPDATE_RECIPE } from "../utils/mutations";
+import { QUERY_USER, QUERY_CATEGORIES } from "../utils/queries";
 
 const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "",
+    category: { id: "", name: "" },
     ingredients: "",
     preparationTime: "",
     servings: "",
@@ -14,15 +15,51 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
     notes: "",
   });
 
+  const {
+    loading: userLoading,
+    error: userError,
+    data: userData,
+  } = useQuery(QUERY_USER);
+  const {
+    loading: categoryLoading,
+    error: categoryError,
+    data: categoryData,
+  } = useQuery(QUERY_CATEGORIES);
+
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [updateRecipe] = useMutation(UPDATE_RECIPE);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    if (name === "category") {
+      const selectedCategory = categoryData.categories.find(
+        (category) => category._id === value
+      );
+      console.log(selectedCategory);
+      if (selectedCategory) {
+        setFormData({
+          ...formData,
+          category: {
+            id: selectedCategory._id,
+            name: selectedCategory.name,
+          },
+        });
+      } else {
+        setFormData({
+          ...formData,
+          category: {
+            id: "",
+            name: "",
+          },
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -41,14 +78,13 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
 
       let updatedRecipe;
 
-      // Call the appropriate mutation based on whether editMode is true or false
       if (mode === "edit") {
         const { data } = await updateRecipe({
           variables: {
             _id: recipeId,
             title,
             description,
-            category,
+            category: category.id,
             ingredients: ingredients
               .split(",")
               .map((ingredient) => ingredient.trim()),
@@ -64,7 +100,7 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
           variables: {
             title,
             description,
-            category,
+            category: category.id,
             ingredients: ingredients
               .split(",")
               .map((ingredient) => ingredient.trim()),
@@ -72,29 +108,17 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
             servings: parseInt(servings),
             instructions,
             notes,
+            author: userData.userRecipes[0].author._id,
           },
         });
+
         updatedRecipe = data.addRecipe;
       }
 
-      // // Update userRecipes state with the new recipe
-      // setUserRecipes((prevRecipes) => {
-      //   if (mode === "edit") {
-      //     // If in edit mode, replace the old recipe with the updated one
-      //     return prevRecipes.map((recipe) =>
-      //       recipe._id === updatedRecipe._id ? updatedRecipe : recipe
-      //     );
-      //   } else {
-      //     // If in add mode, keep the existing recipes and add the new recipe
-      //     return [...prevRecipes, updatedRecipe];
-      //   }
-      // });
-
-      // Reset the form data
       setFormData({
         title: "",
         description: "",
-        category: "",
+        category: { id: "", name: "" },
         ingredients: "",
         preparationTime: "",
         servings: "",
@@ -106,9 +130,15 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
       console.error("Error:", error.message);
     }
   };
+
   const handleCancel = () => {
     onClose();
   };
+
+  if (userLoading || categoryLoading) return <div>Loading...</div>;
+  if (userError || categoryError)
+    return <div>Error: {userError || categoryError}</div>;
+
   return (
     <div>
       <h2>{mode === "edit" ? "Edit Recipe" : "Add New Recipe"}</h2>
@@ -127,12 +157,18 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
           onChange={handleInputChange}
         />
         <label>Category:</label>
-        <input
-          type="text"
+        <select
           name="category"
-          value={formData.category}
+          value={formData.category.id} // Use category ID for select value
           onChange={handleInputChange}
-        />
+        >
+          <option value="">Select category...</option>
+          {categoryData.categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
         <label>Ingredients:</label>
         <textarea
           name="ingredients"
