@@ -62,20 +62,44 @@ const resolvers = {
 
       return { token, user };
     },
-    addRecipe: async (parent, args, context) => {
+    addRecipe: async (
+      parent,
+      {
+        title,
+        category,
+        description,
+        ingredients,
+        preparationTime,
+        servings,
+        instructions,
+        notes,
+        author,
+      },
+      context
+    ) => {
       if (context.user) {
+        const { user } = context;
+
         const recipe = await Recipe.create({
-          ...args,
-          author: context.user._id,
+          title,
+          category,
+          description,
+          ingredients,
+          preparationTime,
+          servings,
+          instructions,
+          notes,
+          author: author,
         });
+
         await recipe.save();
 
-        await User.findByIdAndUpdate(context.user._id, {
+        // Add the created recipe to the user's recipes array
+        await User.findByIdAndUpdate(user._id, {
           $push: { recipes: recipe },
         });
 
         return recipe;
-        console.log(recipe);
       }
 
       throw new AuthenticationError("User not authenticated");
@@ -97,25 +121,7 @@ const resolvers = {
 
       throw new AuthenticationError("User not authenticated");
     },
-    // updateRecipe: async (parent, { _id, ...args }, context) => {
-    //   if (context.user) {
-    //     return await Recipe.findByIdAndUpdate(_id, args, {
-    //       new: true,
-    //     });
-    //   }
 
-    //   throw AuthenticationError;
-    // },
-
-    // updateRecipe: async (parent, { _id, ...args }, context) => {
-    //   if (context.user) {
-    //     return await User.findByIdAndUpdate(context._id, args, {
-    //       new: true,
-    //     });
-    //   }
-
-    //   throw AuthenticationError;
-    // },
     deleteRecipe: async (_, { _id }) => {
       try {
         // Delete the recipe from the database

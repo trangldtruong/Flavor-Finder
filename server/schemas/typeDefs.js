@@ -54,6 +54,7 @@ type Mutation {
         servings: Int!
         instructions: String
         notes: String
+        author: ID!
       ): Recipe
       updateRecipe(_id: ID!, title: String, description: String, category: ID, ingredients: [String], preparationTime: Int, servings: Int, instructions: String, notes: String): Recipe
       deleteRecipe(_id: ID!): Recipe
