@@ -48,7 +48,7 @@ type Mutation {
     addRecipe(
         title: String!
         description: String!
-        category: ID!
+        category: ID
         ingredients: [String]!
         preparationTime: Int!
         servings: Int!
