@@ -43,12 +43,17 @@ type Query {
     userRecipes: [Recipe]
 }
 
+input CategoryInput {
+    _id: ID
+    name: String
+  }
+
 type Mutation {
     addUser(firstName: String!, lastName: String!, email: String!, password: String!): Auth
     addRecipe(
         title: String!
         description: String!
-        category: ID
+        category: CategoryInput
         ingredients: [String]!
         preparationTime: Int!
         servings: Int!
@@ -56,7 +61,7 @@ type Mutation {
         notes: String
         author: ID!
       ): Recipe
-      updateRecipe(_id: ID!, title: String, description: String, category: ID, ingredients: [String], preparationTime: Int, servings: Int, instructions: String, notes: String): Recipe
+      updateRecipe(_id: ID!, title: String, description: String, category: CategoryInput, ingredients: [String], preparationTime: Int, servings: Int, instructions: String, notes: String): Recipe
       deleteRecipe(_id: ID!): Recipe
     login(email: String!, password: String!): Auth
 }

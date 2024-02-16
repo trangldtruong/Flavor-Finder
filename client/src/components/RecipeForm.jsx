@@ -7,7 +7,7 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: { id: "", name: "" },
+    category: { _id: "", name: "" },
     ingredients: "",
     preparationTime: "",
     servings: "",
@@ -19,6 +19,7 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
     loading: userLoading,
     error: userError,
     data: userData,
+    refetch: refetchUser,
   } = useQuery(QUERY_USER);
   const {
     loading: categoryLoading,
@@ -36,12 +37,12 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
       const selectedCategory = categoryData.categories.find(
         (category) => category._id === value
       );
-      console.log(selectedCategory);
+
       if (selectedCategory) {
         setFormData({
           ...formData,
           category: {
-            id: selectedCategory._id,
+            _id: selectedCategory._id,
             name: selectedCategory.name,
           },
         });
@@ -84,7 +85,7 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
             _id: recipeId,
             title,
             description,
-            category: category.id,
+            category,
             ingredients: ingredients
               .split(",")
               .map((ingredient) => ingredient.trim()),
@@ -94,13 +95,14 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
             notes,
           },
         });
+
         updatedRecipe = data.updateRecipe;
       } else {
         const { data } = await addRecipe({
           variables: {
             title,
             description,
-            category: category.id,
+            category,
             ingredients: ingredients
               .split(",")
               .map((ingredient) => ingredient.trim()),
@@ -114,11 +116,11 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
 
         updatedRecipe = data.addRecipe;
       }
-
+      await refetchUser();
       setFormData({
         title: "",
         description: "",
-        category: { id: "", name: "" },
+        category: { _id: "", name: "" },
         ingredients: "",
         preparationTime: "",
         servings: "",
@@ -159,7 +161,7 @@ const RecipeForm = ({ mode, recipeId, setUserRecipes, onClose }) => {
         <label>Category:</label>
         <select
           name="category"
-          value={formData.category.id} // Use category ID for select value
+          value={formData.category._id} // Use category ID for select value
           onChange={handleInputChange}
         >
           <option value="">Select category...</option>
